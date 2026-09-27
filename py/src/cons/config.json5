@@ -1,0 +1,73 @@
+{
+  "user": {
+    "i": {
+      "create_time": "2026.09.26",
+      "admin": true,
+      "profit_share": 1.0,
+      "loss_comp": 0.0,
+      "fee_rate": 0.0
+    },
+    "know": {
+      "create_time": "2026.09.26",
+      "admin": false,
+      "profit_share": 0.5,
+      "loss_comp": 0.0,
+      "fee_rate": 0.0
+    },
+    "youre": {
+      "create_time": "2026.09.26",
+      "admin": false,
+      "profit_share": 0.5,
+      "loss_comp": 0.0,
+      "fee_rate": 0.0
+    },
+    "watching": {
+      "create_time": "2026.09.26",
+      "admin": false,
+      "profit_share": 0.5,
+      "loss_comp": 0.0,
+      "fee_rate": 0.0
+    },
+    "me": {
+      "create_time": "2026.09.26",
+      "admin": false,
+      "profit_share": 0.5,
+      "loss_comp": 0.0,
+      "fee_rate": 0.0
+    },
+    "dakara": {
+      "create_time": "2026.09.26",
+      "admin": false,
+      "profit_share": 0.5,
+      "loss_comp": 0.0,
+      "fee_rate": 0.0
+    },
+    "honntouni": {　
+      "c”eate_time": "2026.09.26",
+      "admin": false,
+      "profit_share": 0.5,
+      "loss_comp": 0.0,
+      "fee_rate": 0.0
+    },
+    "aligatou": {
+      "create_time": "2026.09.26",
+      "admin": false,
+      "profit_share": 0.5,
+      "loss_comp": 0.0,
+      "fee_rate": 0.0
+    },
+    "_byPylon": {
+      "create_time": "2026.09.26",
+      "admin": false,
+      "profit_share": 0.5,
+      "loss_comp": 0.0,
+      "fee_rate": 0.0
+    }
+  },
+  "session": {
+    "host": "localhost",
+    "port": 8619,
+    "userName": "admin",
+    "password": "123456"
+  }
+}
