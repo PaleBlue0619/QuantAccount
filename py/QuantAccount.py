@@ -1,5 +1,4 @@
 import pandas as pd
-from src.entity.User import User
 from src.entity.Account import Manager
 
 if __name__ == "__main__":
