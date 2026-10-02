@@ -1,0 +1,16 @@
+server:
+  port: 8080
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+
+storage:
+  base-dir: ./data          # 数据目录
+  config-file: config.json
+  csv-file: pnl.csv
+  state-file: state.json
+
+spring:
+  jackson:
+    default-property-inclusion: non_null
