@@ -1,6 +1,6 @@
 {
   "user": {
-    "i": {
+    "mxy": {
       "create_time": "2026.09.26",
       "admin": true,
       "model": null,
@@ -8,19 +8,11 @@
       "loss_comp": 0.0,
       "fee_rate": 0.0
     },
-    "me": {
+    "lsf": {
       "create_time": "2026.09.26",
       "admin": false,
       "model": "linear_ratio",
-      "profit_share": 0.5,
-      "loss_comp": 0.0,
-      "fee_rate": 0.0
-    },
-    "aligatou": {
-      "create_time": "2026.09.26",
-      "admin": false,
-      "model": "linear_ratio",
-      "profit_share": 0.5,
+      "profit_share": 1.0,
       "loss_comp": 0.0,
       "fee_rate": 0.0
     }

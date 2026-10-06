@@ -64,43 +64,68 @@ class Manager:
         weight_sum = sum(weight_dict.values())
         return {i: weight_dict[i] / weight_sum for i in weight_dict.keys()}
 
+    def execute(self, total_pnl: float, current_time: pd.Timestamp) -> None:
+        """
+        分配Pnl
+        total_pnl: float 当日需要分配的总pnl
+        """
+        # step1. 结算管理员账户
+        self.admin.onPnl(pnl=total_pnl * self.weight[self.admin.user_name], current_time=current_time)
+
+        # step2. 结算普通用户账户
+        for user_name in self.state.keys(): # 遍历每个用户
+            if user_name == self.admin.user_name:
+                continue
+            weight = self.weight[user_name]
+            pnl = total_pnl * weight
+            user: User = self.state[user_name]
+            # 用户转移资金
+            to_pay, to_pnl = user.onPnl(pnl=pnl, current_time=current_time)
+            user.record(current_time=current_time)
+            # 管理员收到资金
+            self.admin.receive(amount=to_pay, current_time=current_time, user_name=user_name)
+
+        # step3. 账户记录
+        self.admin.record(current_time=current_time)
+
     def replay(self, hist_pnl: pd.DataFrame, hist_behavior: pd.DataFrame):
         """
         输入历史净值 + 历史用户行为 -> 回放计算每个用户的pnl
-        原则: 先回放User & Admin 的oper 再算根据上一期的权重计算Pnl -> 再
+        原则: 先回放User & Admin 的 oper 再算根据上一期的权重计算Pnl
         """
         # step1. lj(hist_pnl, hist_behavior)
-        data = pd.merge(hist_pnl, hist_behavior, how="left", on=["date"])
-
+        data = pd.merge(hist_pnl, hist_behavior, how="outer", on=["date"])
+        print(data)
         # step2. for loop
-        last_time: pd.Timestamp = None
+        next_time: pd.Timestamp = pd.Timestamp(data["date"].iloc[0])
+        counter = 0
         for _, row in data.iterrows():
+            counter += 1
+            counter = min(data.shape[0]-1, counter)
             # 基本信息
             current_time = pd.Timestamp(row["date"])
+            next_time = pd.Timestamp(data["date"].iloc[counter])
             user_name = row["user"]
             total_pnl = row["pnl"]
-            user = self.state[user_name]
-            oper = row["oper"]
-            # step1. 执行oper
-            amount = float(row["value"])
-            if oper == "deposit":
-                user.onDeposit(amount=amount)
-            elif oper == "withdraw":
-                user.onWithdraw(amount=amount)
 
-            # step2. 分配资金权重
-            if last_time != current_time: # 时间发生了变更
+            # branch-1: 若今日没有任何行为 -> user = nan
+            if pd.isnull(user_name):
                 self.weight = self.rebalance()
                 last_time = current_time
-
-            # step 3.-> 进入分支
-            # 分支-1: admin
-            if user_name == self.admin.user_name:   # 该用户为管理员
-                # 3.1 直接分配 pnl
-                self.admin.onPnl(pnl=total_pnl * self.weight[user_name])
+                self.execute(total_pnl=total_pnl, current_time=current_time)    # 执行清算
                 continue
 
-            # 分支-2: user
-            # 3.2 分配 pnl -> 转移 pnl
-            to_pay, _ = user.onPnl(pnl=total_pnl * self.weight[user_name])
-            self.admin.receive(amount=to_pay)
+            # branch-2: 若今日发生了行为
+            user = self.state[user_name]
+            oper = row["oper"]
+            # 2.1 执行oper
+            amount = float(row["value"])
+            if oper == "deposit":
+                user.onDeposit(amount=amount, current_time=current_time)
+            elif oper == "withdraw":
+                user.onWithdraw(amount=amount, current_time=current_time)
+
+            # 2.2 分配资金权重
+            if next_time != current_time: # 时间即将发生变更
+                self.weight = self.rebalance()
+                self.execute(total_pnl=total_pnl, current_time=current_time)    # 执行清算
