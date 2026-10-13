@@ -13,4 +13,5 @@ if __name__ == "__main__":
         print(log)
     print(M.state["mxy"].asset_dict)
     print(M.state["lsf"].asset_dict)
+    print(150981.74142857143+201308.98857142858)
     # print(M.state["mxy"].log)
